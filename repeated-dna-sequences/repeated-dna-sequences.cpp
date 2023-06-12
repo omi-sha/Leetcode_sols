@@ -1,20 +1,22 @@
 class Solution {
 public:
-    vector<string> findRepeatedDnaSequences(string s) {
-        map<string,int> mp;
-        if (s.size()<10)return {};
-        string t;
-        for (int i=0; i<10; i++)t+=s[i];
-        mp[t]++;
-        for (int i=10; i<s.size(); i++){
-            t.erase(t.begin());
-            t.push_back(s[i]);
-            mp[t]++;
+ vector<string> findRepeatedDnaSequences(string s) {
+
+        vector<string> res;
+        if(s.size()<=10) return res;
+        unordered_map<string,int> m;
+        
+        for(int i=0;i<s.size()-9;i++){
+            m[s.substr(i,10)]++;
         }
-        vector<string> ans;
-        for (auto vl: mp){
-            if (vl.second>1)ans.push_back(vl.first);
+        
+        for(auto i:m){
+            if(i.second > 1){
+                res.emplace_back(i.first);
+            }
+            
         }
-        return ans;
+        return res;        
+        
     }
 };

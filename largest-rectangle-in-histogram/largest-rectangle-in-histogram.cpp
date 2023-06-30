@@ -1,37 +1,50 @@
 class Solution {
 public:
-    int largestRectangleArea(vector<int>& heights){
+    vector<int>previous(vector<int>&heights)
+    {
+        vector<int>ans;
+        stack<int>st;
         int n=heights.size();
-        vector<int> nsr(n,0);
-        vector<int> nsl(n,0);
-
-        stack<int> s;
-
-        for(int i=n-1;i>=0;i--){
-            while(!s.empty() && heights[i]<=heights[s.top()]){
-                s.pop();
+        for(int i=0;i<n;i++)
+        {
+            while(!st.empty()&&heights[st.top()]>=heights[i])
+            {
+                st.pop();
             }
-            if(s.empty()) nsr[i]=n;
-            else nsr[i]=s.top();
-            s.push(i);
+            int ele=(st.empty())?-1:st.top();
+            ans.push_back(ele);
+            st.push(i);
         }
-
-        while(!s.empty()) s.pop();
-
-        for(int i=0;i<n;i++){
-            while(!s.empty() && heights[i]<=heights[s.top()]){
-                s.pop();
+        return ans;
+    }
+        vector<int>next(vector<int>&heights)
+    {
+        vector<int>ans;
+        stack<int>st;
+        int n=heights.size();
+        for(int i=n-1;i>=0;i--)
+        {
+            while(!st.empty()&&heights[st.top()]>=heights[i])
+            {
+                st.pop();
             }
-            if(s.empty()) nsl[i]=-1;
-            else nsl[i]=s.top();
-            s.push(i);
+            int ele=(st.empty())?n:st.top();
+            ans.push_back(ele);
+            st.push(i);
         }
-
-        int ans=0;
-
-        for(int i=0;i<n;i++){
-            ans=max(ans, heights[i]*(nsr[i]-nsl[i]-1));
-        }
-        return ans;        
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+    int largestRectangleArea(vector<int>& heights){
+              int res=0;
+              int n=heights.size();
+              vector<int>ps=previous(heights);
+              vector<int>ns=next(heights);
+              for(int i=0;i<n;i++)
+              {
+                  int curr=(ns[i]-ps[i]-1)*heights[i];
+                  res=max(res,curr);
+              }
+              return res;
     }
 };
